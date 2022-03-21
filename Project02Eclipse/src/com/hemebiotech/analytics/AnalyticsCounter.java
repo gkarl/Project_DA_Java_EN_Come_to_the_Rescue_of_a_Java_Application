@@ -1,97 +1,74 @@
 package com.hemebiotech.analytics;
 
-import java.io.*;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.File;
 import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.TreeMap;
 
-public class AnalyticsCounter {
-	/**
-	 *
-	 * @param args
-	 * @throws Exception
-	 */
-	
-	public static void main(String args[]) throws Exception {
-		// la key représente un symptome et Integer représente l'occurence = compteur
-		HashMap<String, Integer> wordMap = new HashMap<String, Integer>();
-		// BufferedReader va aider à lire le fichier symptoms.txt,
-		// des exception peuvent survenir bonne pratique de l'entourer avec blocs try catch
-		// BufferReader a dans son constructeur la class FileReader
-		BufferedReader reader = null;
-		try{
-			// first get input
-			reader = new BufferedReader (new FileReader("symptoms.txt"));
 
-			// Maintenant le programme doit lire le fichier symptoms.txt ligne par ligne avec le type String
-			// Bonne partique rajouter un bloc catch si des exception surviennent avec la méthode readLine()
-			String line = reader.readLine();
-			// tant que on arrive pas sur une ligne null cad aucun mot sur la ligne
-			while(line != null) {
-				// si on avais une erreur sur le fichier symptoms.txt avec plusieurs symptomes sur la meme ligne avec des espace
-				// toLowerCase nous permet de mettre en minuscule tous les mots trouvé sur une ligne afin qu'un symptoms avec ou sans majuscule soit bien comptabilé
-				// la méthode split() permet d'enlever les espace pour ne garder que les mots
-				// que l'on stock dans une variable Array de type String
-				String words[] = line.toLowerCase().split(" ");
+/**
+ * <b>AnalyticsCounter is a Class which allow an application to convert a list of string
+ * (ex symptoms) and counts their occurrences and sorts them alphabetically.</b>
+ * <p>
+ * <b>Note : </b>This Class was the subject of a correction to a previous development
+ * </p>
+ *
+ * @author Karl Gavillot
+ * @version 2.0
+ * @see AnalyticsReader
+ * @since 2022
+ */
+public class AnalyticsCounter extends AnalyticsReader {
 
-				//Pour lire ces mots (symptomes) un par un dans le Array on utilise une boucle for
-				for(String word : words){
-					// si le mot (symptome) = key  est déja dans le HashMap
-					if(wordMap.containsKey(word)){
-						// get permet de retrouver ce mot (symptome key) dans le HashMap ensuite rajoute plus 1 au compteur (value)
-						wordMap.put(word, wordMap.get(word)+1);
-					}else{
-						// alors si le symptom trouvé n'est pas dans le HashMap, on rajoute le mot avec l'occurence 1
-						wordMap.put(word, 1);
-					}
-				}
-				// a ce stade nous n'avons lu que la premiére ligne de symptom.txt
-				//on doit déplacer le cursseur à la ligne suivante
-				line = reader.readLine(); // get another symptom
-			}
+    HashMap<String, Integer> wordMap = new HashMap<>();
+    TreeMap<String, Integer> triMap = new TreeMap<>();
 
-		} catch (FileNotFoundException e){
-			e.printStackTrace();
-		} catch(IOException e){
-			e.printStackTrace();
-		}
+    /**
+     * Constructor uses the keyword 'super' to inherit from its mother'Constructor
+     * Forces to define a file when creating an instance of this child Class
+     *
+     * @param file (ex: symptoms.txt)
+     * @see AnalyticsReader
+     */
+    public AnalyticsCounter(File file) {
+        super(file);
+    }
+
+    /**
+     * <p>The method counterSymptoms() used to create the Map from a list (ex symptoms)
+     * and count the number of occurrences
+     * </p>
+     *
+     * @return Hashmap which Key Value corresponding to the symptoms with their number of occurrences
+     * @see AnalyticsReader
+     */
+    public HashMap<String, Integer> counterSymptoms() {
+        AnalyticsReader symptoms = new AnalyticsReader(this.file); // We obtain an instance of the Class AnalyticsReader
+        List<String> wordList = symptoms.getSymptoms(); // Launch the method to read the file with this instance and stock the return
+        for (String word : wordList) { // Iterate on the word list
+            if (wordMap.containsKey(word)) { // If a word in the list corresponds to a key in the map
+                wordMap.put(word, wordMap.get(word) + 1);  // '.get' allows to find this word in the Map then add 1 to the Map's value
+            } else { // If this word on which we iterate is not found in the Map
+                wordMap.put(word, 1); // We add the word to the Map with the value 1
+            }
+        }
+        //wordMap.forEach((k,v) -> System.out.println(k + " : " + v));
+        return wordMap; // Method return the created Map
+    }
+
+    /**
+     * <p>
+     * The method sortSymptoms() used to sort the symptoms
+     * and their number of occurrences in alphabetical order
+     * </p>
+     *
+     * @return Treemap key value, corresponds to each symptoms with their number of occurrence sorted in alphabetical order
+     */
+    public TreeMap<String, Integer> sortSymptoms() {
+        triMap.putAll(wordMap); // puts all the key value elements of the map in a TreeMap which sorts the keys (words) alphabetically automatically
+        triMap.forEach((k, v) -> System.out.println(k + " : " + v)); // Use lambda to iterate on the TreeMap and display in the console its key (symptoms) value (occurences)
+        return triMap; // Method return the created TreeMap
+    }
 
 
-		finally {
-			// Une foi la lecture du de symptoms.txt terminé on ferme le flux de lecture avec ce fichier
-			// et quand on le ferme reader des exception peuvent survenir, bonne pratique de l'entourer avec blocs try catch
-			try{
-				reader.close();
-			} catch(IOException e){
-				e.printStackTrace();
-			}
-		}
-		// affiche le décompte des symptomes dans la console
-		wordMap.forEach((k,v) -> System.out.println(k + " : " + v));
-
-		TreeMap<String, Integer> triMap = new TreeMap<>();
-		triMap.putAll(wordMap);
-
-		// affiche le décompte des symptomes par ordre alphabétique dans la console
-		System.out.println("_________________________________________________________ Sorted List \n");
-		triMap.forEach((k,v) -> System.out.println(k + " : " + v));
-
-		int SymptomsTotal = 0;
-		try{
-			// next generate output
-			FileWriter writer = new FileWriter ("result.out");
-			//writer.write(String.valueOf(wordMap));
-			for ( Map.Entry<String, Integer> entry  : triMap.entrySet()) {
-				writer.write(entry.getKey() + " = " + entry.getValue() + "\n");
-				SymptomsTotal += entry.getValue();
-			}
-			writer.write("Symptoms variations= " + triMap.size() + " Total of symptoms = " + SymptomsTotal);
-			writer.close();
-		} catch(IOException e){
-			e.printStackTrace();
-		}
-	}
 }
