@@ -21,6 +21,8 @@ import java.util.TreeMap;
  */
 public class AnalyticsWriter extends AnalyticsCounter {
 
+    private Object HashMap;
+
     /**
      * Constructor uses the keyword 'super' to inherit from its mother'Constructor
      * Forces to define a file when creating an instance of this child Class
@@ -37,17 +39,18 @@ public class AnalyticsWriter extends AnalyticsCounter {
      * <p>The method counterSymptoms() used an object map to export it as a text file
      * </p>
      *
-     * @return a text file result.out
+     * @return a text file result.out which contains the distinct symptoms and the number of occurrences of each of these symptoms
      * @see AnalyticsCounter
      */
-    public void symptomsWriter() {
-        AnalyticsCounter symptoms = new AnalyticsCounter(file); // We obtain an instance of the Class AnalyticsCounter call 'symptoms'
-        HashMap<String, Integer> wordMap = symptoms.counterSymptoms(); // Launch method from it's instance to store Map return that contain words with their occurences
-        TreeMap<String, Integer> tMap = symptoms.sortSymptoms(); // Launch method from it's instance to store TreeMap to have the keys words in alphabetical order
+    public File symptomsWriter() {
+
+        HashMap<String, Integer> wordMap = this.counterSymptoms(); // with inheritance we get the return of the counterSymptoms() method from the AnalyticsCounter mother class and we store it in a variable
+        TreeMap<String, Integer> tMap = this.sortSymptoms(wordMap); // with inheritance we get the return of the sortSymptoms() method from the AnalyticsCounter mother class and we store it in a variable
         int symptomsTotal = 0; // Initialize a variable that will contain the total number of symptoms
         try { // when we close the writer some exceptions can occur, good practice to surround it with try catch blocks
             // next generate output
-            FileWriter writer = new FileWriter("result.out"); //  Instance of FileWriter
+            File file = new File("result.out");
+            FileWriter writer = new FileWriter(file); //  Instance of FileWriter
             for (Map.Entry<String, Integer> entry : tMap.entrySet()) { // entrySet() method to iterate through a Map
                 writer.write(entry.getKey() + " = " + entry.getValue() + "\n"); // write from TreeMap's Keys/Values elements into the output file
                 symptomsTotal += entry.getValue(); // counts the total number of occurrences and store them
@@ -57,6 +60,7 @@ public class AnalyticsWriter extends AnalyticsCounter {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return file;
     }
 
 }

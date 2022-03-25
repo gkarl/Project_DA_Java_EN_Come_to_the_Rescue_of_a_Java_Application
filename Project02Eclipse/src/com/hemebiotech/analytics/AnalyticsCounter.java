@@ -20,8 +20,6 @@ import java.util.TreeMap;
  */
 public class AnalyticsCounter extends AnalyticsReader {
 
-    HashMap<String, Integer> wordMap = new HashMap<>();
-    TreeMap<String, Integer> triMap = new TreeMap<>();
 
     /**
      * Constructor uses the keyword 'super' to inherit from its mother'Constructor
@@ -43,8 +41,8 @@ public class AnalyticsCounter extends AnalyticsReader {
      * @see AnalyticsReader
      */
     public HashMap<String, Integer> counterSymptoms() {
-        AnalyticsReader symptoms = new AnalyticsReader(this.file); // We obtain an instance of the Class AnalyticsReader
-        List<String> wordList = symptoms.getSymptoms(); // Launch the method to read the file with this instance and stock the return
+        HashMap<String, Integer> wordMap = new HashMap<>();
+        List<String> wordList = this.getSymptoms(); // with inheritance we get the return of the getSymptoms() method from the AnalyticsReader mother class and we store it in a variable
         for (String word : wordList) { // Iterate on the word list
             if (wordMap.containsKey(word)) { // If a word in the list corresponds to a key in the map
                 wordMap.put(word, wordMap.get(word) + 1);  // '.get' allows to find this word in the Map then add 1 to the Map's value
@@ -64,7 +62,8 @@ public class AnalyticsCounter extends AnalyticsReader {
      *
      * @return Treemap key value, corresponds to each symptoms with their number of occurrence sorted in alphabetical order
      */
-    public TreeMap<String, Integer> sortSymptoms() {
+    public TreeMap<String, Integer> sortSymptoms(HashMap<String, Integer> wordMap) {
+        TreeMap<String, Integer> triMap = new TreeMap<>();
         triMap.putAll(wordMap); // puts all the key value elements of the map in a TreeMap which sorts the keys (words) alphabetically automatically
         triMap.forEach((k, v) -> System.out.println(k + " : " + v)); // Use lambda to iterate on the TreeMap and display in the console its key (symptoms) value (occurences)
         return triMap; // Method return the created TreeMap

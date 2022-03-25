@@ -27,7 +27,7 @@ public class AnalyticsReader implements ISymptomReader {
      * Constructor which imposes when an instance of the AnalyticsReader class is created
      * to define a file to be used by the program
      *
-     * @param file
+     * @param file it is necessary to define at the creation of the AnalyticsReader object the file that will be processed
      */
     public AnalyticsReader(File file) {
         this.file = file;
@@ -37,7 +37,7 @@ public class AnalyticsReader implements ISymptomReader {
      * <p>The method getSymptoms() used to transform a text file into a list object
      * </p>
      *
-     * @return Hashmap which Key Value corresponding to the symptoms with their number of occurrences
+     * @return return a List object which contains the list of all symptom words contained in the text file entered by user here symptoms.txt
      * @see AnalyticsReader
      */
     public List<String> getSymptoms() {
