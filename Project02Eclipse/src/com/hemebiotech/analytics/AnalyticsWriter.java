@@ -21,7 +21,7 @@ import java.util.TreeMap;
  */
 public class AnalyticsWriter extends AnalyticsCounter {
 
-    private Object HashMap;
+
 
     /**
      * Constructor uses the keyword 'super' to inherit from its mother'Constructor
