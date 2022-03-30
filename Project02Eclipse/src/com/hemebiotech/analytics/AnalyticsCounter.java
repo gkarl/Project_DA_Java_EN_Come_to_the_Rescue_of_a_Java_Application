@@ -18,19 +18,8 @@ import java.util.TreeMap;
  * @see AnalyticsReader
  * @since 2022
  */
-public class AnalyticsCounter extends AnalyticsReader {
+public class AnalyticsCounter {
 
-
-    /**
-     * Constructor uses the keyword 'super' to inherit from its mother'Constructor
-     * Forces to define a file when creating an instance of this child Class
-     *
-     * @param file (ex: symptoms.txt)
-     * @see AnalyticsReader
-     */
-    public AnalyticsCounter(File file) {
-        super(file);
-    }
 
     /**
      * <p>The method counterSymptoms() used to create the Map from a list (ex symptoms)
@@ -40,9 +29,8 @@ public class AnalyticsCounter extends AnalyticsReader {
      * @return Hashmap which Key Value corresponding to the symptoms with their number of occurrences
      * @see AnalyticsReader
      */
-    public HashMap<String, Integer> counterSymptoms() {
+    public HashMap<String, Integer> counterSymptoms(List<String> wordList) {
         HashMap<String, Integer> wordMap = new HashMap<>();
-        List<String> wordList = this.getSymptoms(); // with inheritance we get the return of the getSymptoms() method from the AnalyticsReader mother class and we store it in a variable
         for (String word : wordList) { // Iterate on the word list
             if (wordMap.containsKey(word)) { // If a word in the list corresponds to a key in the map
                 wordMap.put(word, wordMap.get(word) + 1);  // '.get' allows to find this word in the Map then add 1 to the Map's value
@@ -68,6 +56,5 @@ public class AnalyticsCounter extends AnalyticsReader {
         triMap.forEach((k, v) -> System.out.println(k + " : " + v)); // Use lambda to iterate on the TreeMap and display in the console its key (symptoms) value (occurences)
         return triMap; // Method return the created TreeMap
     }
-
 
 }

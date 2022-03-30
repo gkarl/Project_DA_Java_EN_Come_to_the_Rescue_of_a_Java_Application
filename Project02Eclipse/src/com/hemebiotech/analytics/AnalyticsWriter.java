@@ -19,21 +19,8 @@ import java.util.TreeMap;
  * @see AnalyticsCounter
  * @since 2022
  */
-public class AnalyticsWriter extends AnalyticsCounter {
+public class AnalyticsWriter {
 
-
-
-    /**
-     * Constructor uses the keyword 'super' to inherit from its mother'Constructor
-     * Forces to define a file when creating an instance of this child Class
-     *
-     * @param file (ex: symptoms.txt)
-     * @see AnalyticsReader
-     * @see AnalyticsCounter
-     */
-    public AnalyticsWriter(File file) {
-        super(file);
-    }
 
     /**
      * <p>The method counterSymptoms() used an object map to export it as a text file
@@ -42,14 +29,12 @@ public class AnalyticsWriter extends AnalyticsCounter {
      * @return a text file result.out which contains the distinct symptoms and the number of occurrences of each of these symptoms
      * @see AnalyticsCounter
      */
-    public File symptomsWriter() {
-
-        HashMap<String, Integer> wordMap = this.counterSymptoms(); // with inheritance we get the return of the counterSymptoms() method from the AnalyticsCounter mother class and we store it in a variable
-        TreeMap<String, Integer> tMap = this.sortSymptoms(wordMap); // with inheritance we get the return of the sortSymptoms() method from the AnalyticsCounter mother class and we store it in a variable
+    public File symptomsWriter(TreeMap<String, Integer> tMap) {
         int symptomsTotal = 0; // Initialize a variable that will contain the total number of symptoms
+        File file = new File("result.out");
         try { // when we close the writer some exceptions can occur, good practice to surround it with try catch blocks
             // next generate output
-            File file = new File("result.out");
+
             FileWriter writer = new FileWriter(file); //  Instance of FileWriter
             for (Map.Entry<String, Integer> entry : tMap.entrySet()) { // entrySet() method to iterate through a Map
                 writer.write(entry.getKey() + " = " + entry.getValue() + "\n"); // write from TreeMap's Keys/Values elements into the output file

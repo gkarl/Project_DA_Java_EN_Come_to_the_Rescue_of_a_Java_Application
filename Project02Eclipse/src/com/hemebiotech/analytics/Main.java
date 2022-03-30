@@ -1,6 +1,9 @@
 package com.hemebiotech.analytics;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.TreeMap;
 
 public class Main {
 
@@ -14,7 +17,15 @@ public class Main {
      * @see AnalyticsWriter
      */
     public static void main(String args[]) {
-        AnalyticsWriter write = new AnalyticsWriter(new File("symptoms.txt"));
-        write.symptomsWriter();
+
+        AnalyticsReader read = new AnalyticsReader(new File("symptoms.txt"));
+        List<String> wordList = read.getSymptoms();
+
+        AnalyticsCounter count = new AnalyticsCounter();
+        HashMap<String, Integer> wordMap = count.counterSymptoms(wordList);
+        TreeMap<String, Integer> tMap = count.sortSymptoms(wordMap);
+
+        AnalyticsWriter write = new AnalyticsWriter();
+        write.symptomsWriter(tMap);
     }
 }
